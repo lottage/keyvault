@@ -1,34 +1,99 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Web3-Security-Hide-Private-Keys-NextJS
+👮‍♂️ This repo includes all the steps to use Server Side Rendering SSR and API to properly hide private keys in Web3 dev front-ends. Store the keys in a separate API server and use routes to retrieve the values. Use SSR to render the keys and maintain the values hidden from the client's browsers due to client side rendering.
 
-## Getting Started
+** THE FILES ATTACHED TO THIS REPO ARE FOR EDUCATIONAL PURPOSES ONLY **
 
-First, run the development server:
+** NOT FINANCIAL ADVISE **
 
-```bash
-npm run dev
-# or
-yarn dev
+** USE IT AT YOUR OWN RISK** **I'M NOT RESPONSIBLE FOR ANY USE, ISSUES ETC.. **
+
+Please follow video tutorial.
+
+Click for video:
+
+<a href="https://youtu.be/ggh83ZEpUnI" target="_blank"><img src="https://github.com/net2devcrypto/misc/blob/main/ytlogo2.png" width="150" height="40"></a> 
+
+## Step-1 Create the Key Vault Server in Next JS
+
+```shell
+npx create-next-app keyvault
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Step-2 Add the keyvault.js file under /pages/api/
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+add the file keyvault.js located in this repo to /pages/api/
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+Update the file with your own values:
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+```shell
+      privkey:
+        "ENTER YOUR WALLET PRIVATE KEY",
+      apikey: "ENTER YOUR API KEY",
+```
 
-## Learn More
+Save file.
 
-To learn more about Next.js, take a look at the following resources:
+Go to your project folder and start the server:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```shell
+      cd keyvault
+      npm run dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Step-3 Provide to your NextJS FrontEnd the path to the keyvault API
 
-## Deploy on Vercel
+Create an env file in the root project directory:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+" .env.local "
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Add the following value inside the file:
+
+```shell
+     NEXT_PUBLIC_API_SERVER='http://IPADDRESS_OF_YOUR_KEYVAULT_SERVER:3000/api/keyvault'
+```
+
+Save file and restart server
+
+```shell
+ctrl + C
+npm run dev
+```
+
+## Step-4 Add the Server Side Rendering Function in the page you wish to use rendered values:
+
+Example for index.js, go to the end of the file and add this export function:
+
+```shell
+export async function getServerSideProps() {
+
+  const res = await fetch(process.env.NEXT_PUBLIC_API_SERVER).then(
+    (response) => response.json()
+  );
+
+  return {
+    props: {res}
+  };
+}
+```
+
+Now you may invoke "props" under the page client export function:
+
+example for index.js, add "props" to the function:
+
+```shell
+export default function Home(props) {
+```
+
+You may now use the props values to replace the private key values in the function:
+
+example : 
+
+Call: "props.res.privkey" under to use the SSR wallet private key value:
+
+```shell
+const wallet = new ethers.Wallet(props.res.privkey, provider)
+```
+
+Save file and refresh!
+
+Watch the video if you have any doubts. 

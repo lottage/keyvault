@@ -1,8 +1,10 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
+import absoluteUrl from "next-absolute-url";
 
-export default function Home() {
+
+export default function Home(props) {
   return (
     <div className={styles.container}>
       <Head>
@@ -67,3 +69,5 @@ export default function Home() {
     </div>
   )
 }
+
+
